@@ -1,4 +1,4 @@
-package com.EmoHipHop.mz2mo.global.config;
+package com.EmoHipHop.mz2mo.global.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

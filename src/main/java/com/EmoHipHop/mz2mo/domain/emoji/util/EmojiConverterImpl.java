@@ -2,6 +2,7 @@ package com.EmoHipHop.mz2mo.domain.emoji.util;
 
 import com.EmoHipHop.mz2mo.domain.emoji.data.dto.AddEmojiDto;
 import com.EmoHipHop.mz2mo.domain.emoji.data.dto.EmojiDto;
+import com.EmoHipHop.mz2mo.domain.emoji.data.request.BulkCreateEmojiRequest;
 import com.EmoHipHop.mz2mo.domain.emoji.data.request.CreateEmojiRequest;
 import com.EmoHipHop.mz2mo.domain.emoji.data.response.EmojiListResponse;
 import com.EmoHipHop.mz2mo.domain.emoji.data.response.EmojiResponse;
@@ -58,5 +59,10 @@ public class EmojiConverterImpl implements EmojiConverter {
                 emojiDto.name(),
                 emojiDto.canUse()
         );
+    }
+
+    @Override
+    public List<AddEmojiDto> toDto(BulkCreateEmojiRequest request) {
+        return request.list().stream().map(this::toDto).toList();
     }
 }

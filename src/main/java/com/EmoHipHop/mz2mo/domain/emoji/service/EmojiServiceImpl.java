@@ -30,6 +30,16 @@ public class EmojiServiceImpl implements EmojiService {
         return emojiConverter.toDto(savedEntity);
     }
 
+    @Override
+    public List<EmojiDto> addEmojiBulk(List<AddEmojiDto> addDtos) {
+        List<Emoji> entities = addDtos.stream().map(dto -> {
+            String id = generateId();
+            return emojiConverter.toEntity(dto, id);
+        }).toList();
+        List<Emoji> savedEntities = emojiRepository.saveAll(entities);
+        return savedEntities.stream().map(emojiConverter::toDto).toList();
+    }
+
     private String generateId() {
         return "mz2mo:emoji:" + UUID.randomUUID();
     }

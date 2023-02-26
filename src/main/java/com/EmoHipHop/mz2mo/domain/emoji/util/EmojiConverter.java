@@ -2,6 +2,7 @@ package com.EmoHipHop.mz2mo.domain.emoji.util;
 
 import com.EmoHipHop.mz2mo.domain.emoji.data.dto.AddEmojiDto;
 import com.EmoHipHop.mz2mo.domain.emoji.data.dto.EmojiDto;
+import com.EmoHipHop.mz2mo.domain.emoji.data.request.BulkCreateEmojiRequest;
 import com.EmoHipHop.mz2mo.domain.emoji.data.request.CreateEmojiRequest;
 import com.EmoHipHop.mz2mo.domain.emoji.data.response.EmojiListResponse;
 import com.EmoHipHop.mz2mo.domain.emoji.data.response.EmojiResponse;
@@ -19,4 +20,6 @@ public interface EmojiConverter {
     EmojiResponse toResponse(EmojiDto dto);
 
     Emoji toEntity(AddEmojiDto emojiDto, String id);
+
+    List<AddEmojiDto> toDto(BulkCreateEmojiRequest request);
 }

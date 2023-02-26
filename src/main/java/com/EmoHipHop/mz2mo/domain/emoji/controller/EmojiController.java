@@ -2,6 +2,7 @@ package com.EmoHipHop.mz2mo.domain.emoji.controller;
 
 import com.EmoHipHop.mz2mo.domain.emoji.data.dto.AddEmojiDto;
 import com.EmoHipHop.mz2mo.domain.emoji.data.dto.EmojiDto;
+import com.EmoHipHop.mz2mo.domain.emoji.data.request.BulkCreateEmojiRequest;
 import com.EmoHipHop.mz2mo.domain.emoji.data.request.CreateEmojiRequest;
 import com.EmoHipHop.mz2mo.domain.emoji.data.response.EmojiListResponse;
 import com.EmoHipHop.mz2mo.domain.emoji.data.response.EmojiResponse;
@@ -31,10 +32,18 @@ public class EmojiController {
     }
 
     @PostMapping
-    public ResponseEntity<Response<EmojiResponse>> addEmoji(@RequestBody CreateEmojiRequest request) {
+    public ResponseEntity<Response<EmojiResponse>> createEmoji(@RequestBody CreateEmojiRequest request) {
         AddEmojiDto addDto = emojiConverter.toDto(request);
         EmojiDto dto = emojiService.addEmoji(addDto);
         EmojiResponse response = emojiConverter.toResponse(dto);
+        return ResponseEntity.ok(new Response<>("이모지 추가에 성공하였습니다!", response));
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<Response<EmojiListResponse>> createEmojiBulk(@RequestBody BulkCreateEmojiRequest request) {
+        List<AddEmojiDto> addDtos = emojiConverter.toDto(request);
+        List<EmojiDto> dtos = emojiService.addEmojiBulk(addDtos);
+        EmojiListResponse response = emojiConverter.toResponse(dtos);
         return ResponseEntity.ok(new Response<>("이모지 추가에 성공하였습니다!", response));
     }
 }

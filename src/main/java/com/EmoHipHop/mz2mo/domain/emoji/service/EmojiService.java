@@ -9,4 +9,6 @@ public interface EmojiService {
     List<EmojiDto> getAllEmojis(boolean searchOnlyCanUse);
 
     EmojiDto addEmoji(AddEmojiDto emojiDto);
+
+    List<EmojiDto> addEmojiBulk(List<AddEmojiDto> addDtos);
 }

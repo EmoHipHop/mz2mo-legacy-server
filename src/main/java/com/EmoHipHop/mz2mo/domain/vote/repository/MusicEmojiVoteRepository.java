@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface MusicEmojiVoteRepository extends JpaRepository<MusicEmojiVote, String> {
     int countByUserIdAndMusicId(String userId, String musicId);
+
+    List<MusicEmojiVote> findAllByMusicId(String musicId);
     List<MusicEmojiVote> findAllByUserIdAndMusicId(String userId, String musicId);
     void deleteByUserIdAndMusicIdAndEmojiId(String userId, String musicId, String emojiId);
 }

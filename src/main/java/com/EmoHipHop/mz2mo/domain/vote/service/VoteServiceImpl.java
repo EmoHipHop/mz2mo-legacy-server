@@ -18,7 +18,9 @@ import com.EmoHipHop.mz2mo.global.music.data.entity.Music;
 import com.EmoHipHop.mz2mo.global.music.exception.MusicNotFoundException;
 import com.EmoHipHop.mz2mo.global.user.data.entity.User;
 import com.EmoHipHop.mz2mo.global.user.exception.UserNotFoundException;
+import com.EmoHipHop.mz2mo.global.vote.data.event.VoteUpdateEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -34,6 +36,7 @@ public class VoteServiceImpl implements VoteService {
     private final UserRepository userRepository;
     private final MusicRepository musicRepository;
     private final EmojiRepository emojiRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override @Transactional
     public VoteDto addEmojiVote(AddVoteDto dto) {
@@ -41,6 +44,9 @@ public class VoteServiceImpl implements VoteService {
 
         MusicEmojiVote vote = generateEntity(dto);
         musicEmojiVoteRepository.save(vote);
+
+        VoteUpdateEvent event = new VoteUpdateEvent(dto.userId(), dto.musicId());
+        eventPublisher.publishEvent(event);
 
         List<MusicEmojiVote> votes = musicEmojiVoteRepository.findAllByUserIdAndMusicId(dto.userId(), dto.musicId());
         return voteConverter.toDto(votes, dto.userId(), dto.musicId());

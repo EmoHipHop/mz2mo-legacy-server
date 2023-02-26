@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface EmojiRepository extends JpaRepository<Emoji, String> {
     List<Emoji> findAllByCanUse(boolean canUse);
+    Emoji findByCode(String code);
 }

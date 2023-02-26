@@ -8,6 +8,7 @@ import com.EmoHipHop.mz2mo.domain.vote.data.dto.VoteDto;
 import com.EmoHipHop.mz2mo.domain.vote.data.entity.MusicEmojiVote;
 import com.EmoHipHop.mz2mo.domain.vote.exception.DuplicateVotedException;
 import com.EmoHipHop.mz2mo.domain.vote.exception.ExceededMaxVoteException;
+import com.EmoHipHop.mz2mo.domain.vote.exception.InvalidVoteEmojiException;
 import com.EmoHipHop.mz2mo.domain.vote.repository.MusicEmojiVoteRepository;
 import com.EmoHipHop.mz2mo.domain.vote.util.VoteConverter;
 import com.EmoHipHop.mz2mo.global.emoji.data.entity.Emoji;
@@ -58,6 +59,7 @@ public class VoteServiceImpl implements VoteService {
         User user = userRepository.findById(dto.userId()).orElseThrow(() -> new UserNotFoundException(dto.userId()));
         Music music = musicRepository.findById(dto.musicId()).orElseThrow(() -> new MusicNotFoundException(dto.musicId()));
         Emoji emoji = emojiRepository.findById(dto.emojiId()).orElseThrow(() -> new EmojiNotFoundException(dto.emojiId()));
+        if(!emoji.isCanUse()) throw new InvalidVoteEmojiException(dto.emojiId());
 
         return new MusicEmojiVote(voteId, user, music, emoji);
     }

@@ -1,23 +1,28 @@
 package com.EmoHipHop.mz2mo.domain.vote.util;
 
+import com.EmoHipHop.mz2mo.domain.emoji.repository.EmojiRepository;
 import com.EmoHipHop.mz2mo.domain.vote.data.dto.AddVoteDto;
 import com.EmoHipHop.mz2mo.domain.vote.data.dto.VoteDto;
 import com.EmoHipHop.mz2mo.domain.vote.data.entity.MusicEmojiVote;
 import com.EmoHipHop.mz2mo.domain.vote.data.request.AddVoteRequest;
 import com.EmoHipHop.mz2mo.domain.vote.data.response.AddVoteResponse;
 import com.EmoHipHop.mz2mo.global.emoji.data.entity.Emoji;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class VoteConverterImpl implements VoteConverter {
+    private final EmojiRepository emojiRepository;
+
     @Override
     public AddVoteDto toDto(AddVoteRequest request, String userId, String musicId) {
         return new AddVoteDto(
             userId,
             musicId,
-            request.emojiCode()
+            emojiRepository.findByCode(request.emojiCode()).getId()
         );
     }
 

@@ -9,9 +9,9 @@ public class DummyJwtTokenUtil implements JwtTokenUtil {
     @Override
     public Map<String, String> decode(String token) {
         return Map.ofEntries(
-                Map.entry("type", "Bearer"),
+                Map.entry("type", "login-access"),
                 Map.entry("userId", "mz2mo:user:test"),
-                Map.entry("roles", "USER")
+                Map.entry("expiration", "false")
         );
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackageClasses = MusicController.class)
 public class MusicControllerAdvice {
     @ExceptionHandler(MalformedSpotifyUriException.class)
     public ResponseEntity<ErrorResponse> handleMalformedSpotifyUriException(MalformedSpotifyUriException e) {

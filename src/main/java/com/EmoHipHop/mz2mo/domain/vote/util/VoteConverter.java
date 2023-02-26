@@ -14,7 +14,7 @@ import java.util.List;
 public interface VoteConverter {
     AddVoteDto toDto(AddVoteRequest request, String userId, String musicId);
     RemoveVoteDto toDto(RemoveVoteRequest request, String userId, String musicId);
-    VoteDto toDto(List<MusicEmojiVote> votes);
+    VoteDto toDto(List<MusicEmojiVote> votes, String s, String musicId);
     AddVoteResponse toAddResponse(VoteDto dto);
     RemoveVoteResponse toRemoveResponse(VoteDto dto);
 

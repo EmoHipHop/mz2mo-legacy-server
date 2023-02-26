@@ -1,9 +1,12 @@
 package com.EmoHipHop.mz2mo.domain.emoji.util;
 
+import com.EmoHipHop.mz2mo.domain.emoji.data.dto.AddEmojiDto;
 import com.EmoHipHop.mz2mo.domain.emoji.data.dto.EmojiDto;
+import com.EmoHipHop.mz2mo.domain.emoji.data.request.CreateEmojiRequest;
 import com.EmoHipHop.mz2mo.domain.emoji.data.response.EmojiListResponse;
 import com.EmoHipHop.mz2mo.domain.emoji.data.response.EmojiResponse;
 import com.EmoHipHop.mz2mo.global.emoji.data.entity.Emoji;
+import com.EmoHipHop.mz2mo.global.emoji.util.EmojiUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,12 +29,34 @@ public class EmojiConverterImpl implements EmojiConverter {
         );
     }
 
-    private EmojiResponse toResponse(EmojiDto emoji) {
+    @Override
+    public AddEmojiDto toDto(CreateEmojiRequest request) {
+        String code = EmojiUtil.serialize(request.rawEmoji());
+        return new AddEmojiDto(
+                code,
+                request.name(),
+                request.canUse()
+        );
+    }
+
+    @Override
+    public EmojiResponse toResponse(EmojiDto emoji) {
+        String rawEmoji = EmojiUtil.deserialize(emoji.code());
         return new EmojiResponse(
             emoji.id(),
             emoji.name(),
-            emoji.code(),
+            rawEmoji,
             emoji.canUse()
+        );
+    }
+
+    @Override
+    public Emoji toEntity(AddEmojiDto emojiDto, String id) {
+        return new Emoji(
+                id,
+                emojiDto.code(),
+                emojiDto.name(),
+                emojiDto.canUse()
         );
     }
 }

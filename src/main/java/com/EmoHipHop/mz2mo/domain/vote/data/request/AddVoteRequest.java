@@ -1,3 +1,3 @@
 package com.EmoHipHop.mz2mo.domain.vote.data.request;
 
-public record AddVoteRequest(String emojiCode) { }
+public record AddVoteRequest(String rawEmoji) { }

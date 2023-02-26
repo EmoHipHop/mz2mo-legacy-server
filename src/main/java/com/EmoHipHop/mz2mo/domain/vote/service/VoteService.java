@@ -6,5 +6,5 @@ import com.EmoHipHop.mz2mo.domain.vote.data.dto.VoteDto;
 
 public interface VoteService {
     VoteDto addEmojiVote(AddVoteDto dto);
-    VoteDto removeEmojiVote(RemoveVoteDto removeDto);
+    VoteDto removeEmojiVote(RemoveVoteDto dto);
 }

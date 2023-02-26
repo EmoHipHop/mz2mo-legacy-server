@@ -4,6 +4,7 @@ import com.EmoHipHop.mz2mo.domain.emoji.repository.EmojiRepository;
 import com.EmoHipHop.mz2mo.domain.music.repository.MusicRepository;
 import com.EmoHipHop.mz2mo.domain.user.repository.UserRepository;
 import com.EmoHipHop.mz2mo.domain.vote.data.dto.AddVoteDto;
+import com.EmoHipHop.mz2mo.domain.vote.data.dto.RemoveVoteDto;
 import com.EmoHipHop.mz2mo.domain.vote.data.dto.VoteDto;
 import com.EmoHipHop.mz2mo.domain.vote.data.entity.MusicEmojiVote;
 import com.EmoHipHop.mz2mo.domain.vote.exception.DuplicateVotedException;
@@ -20,6 +21,7 @@ import com.EmoHipHop.mz2mo.global.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +35,7 @@ public class VoteServiceImpl implements VoteService {
     private final MusicRepository musicRepository;
     private final EmojiRepository emojiRepository;
 
-    @Override
+    @Override @Transactional
     public VoteDto addEmojiVote(AddVoteDto dto) {
         validateAddVote(dto);
 
@@ -41,10 +43,38 @@ public class VoteServiceImpl implements VoteService {
         musicEmojiVoteRepository.save(vote);
 
         List<MusicEmojiVote> votes = musicEmojiVoteRepository.findAllByUserIdAndMusicId(dto.userId(), dto.musicId());
-        return voteConverter.toDto(votes);
+        return voteConverter.toDto(votes, dto.userId(), dto.musicId());
+    }
+
+    @Override @Transactional
+    public VoteDto removeEmojiVote(RemoveVoteDto dto) {
+        validateRemoveVote(dto);
+
+        musicEmojiVoteRepository.deleteByUserIdAndMusicIdAndEmojiId(dto.userId(), dto.musicId(), dto.emojiId());
+
+        List<MusicEmojiVote> votes = musicEmojiVoteRepository.findAllByUserIdAndMusicId(dto.userId(), dto.musicId());
+        return voteConverter.toDto(votes, dto.userId(), dto.musicId());
+    }
+
+    private void validateRemoveVote(RemoveVoteDto dto) {
+        boolean isUserExists = userRepository.existsById(dto.userId());
+        boolean isMusicExists = musicRepository.existsById(dto.musicId());
+        boolean isEmojiExists = emojiRepository.existsById(dto.emojiId());
+
+        if (!isUserExists) throw new UserNotFoundException(dto.userId());
+        if (!isMusicExists) throw new MusicNotFoundException(dto.musicId());
+        if (!isEmojiExists) throw new EmojiNotFoundException(dto.emojiId());
     }
 
     private void validateAddVote(AddVoteDto dto) {
+        boolean isUserExists = userRepository.existsById(dto.userId());
+        boolean isMusicExists = musicRepository.existsById(dto.musicId());
+        boolean isEmojiExists = emojiRepository.existsById(dto.emojiId());
+
+        if (!isUserExists) throw new UserNotFoundException(dto.userId());
+        if (!isMusicExists) throw new MusicNotFoundException(dto.musicId());
+        if (!isEmojiExists) throw new EmojiNotFoundException(dto.emojiId());
+
         int voteCount = musicEmojiVoteRepository.countByUserIdAndMusicId(dto.userId(), dto.musicId());
         if(voteCount >= MAX_VOTE_COUNT) throw new ExceededMaxVoteException(dto.userId(), dto.musicId());
 
@@ -56,9 +86,9 @@ public class VoteServiceImpl implements VoteService {
 
     private MusicEmojiVote generateEntity(AddVoteDto dto) {
         String voteId = generateId();
-        User user = userRepository.findById(dto.userId()).orElseThrow(() -> new UserNotFoundException(dto.userId()));
-        Music music = musicRepository.findById(dto.musicId()).orElseThrow(() -> new MusicNotFoundException(dto.musicId()));
-        Emoji emoji = emojiRepository.findById(dto.emojiId()).orElseThrow(() -> new EmojiNotFoundException(dto.emojiId()));
+        User user = userRepository.getReferenceById(dto.userId());
+        Music music = musicRepository.getReferenceById(dto.musicId());
+        Emoji emoji = emojiRepository.getReferenceById(dto.emojiId());
         if(!emoji.isCanUse()) throw new InvalidVoteEmojiException(dto.emojiId());
 
         return new MusicEmojiVote(voteId, user, music, emoji);

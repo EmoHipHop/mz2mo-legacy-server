@@ -71,7 +71,7 @@ public class JwtAuthenticateFilter extends OncePerRequestFilter {
 
     private void validatePayload(Map<String, String> payload) {
         if(isFormatWrong(payload)) throw new LoginException("토큰이 담고있는 정보가 바르지 않습니다!");
-        if(isNotRefreshToken(payload)) throw new LoginException("해당 토큰은 액세스토큰이 아닙니다!");
+        if(isNotAccessToken(payload)) throw new LoginException("해당 토큰은 액세스토큰이 아닙니다!");
         if(isExpired(payload)) throw new LoginException("이미 만료된 액세스토큰입니다!");
     }
 
@@ -81,7 +81,7 @@ public class JwtAuthenticateFilter extends OncePerRequestFilter {
                 .noneMatch(payload::containsKey);
     }
 
-    private boolean isNotRefreshToken(Map<String, String> payload) {
+    private boolean isNotAccessToken(Map<String, String> payload) {
         return !payload.get("type").equals(TokenType.LOGIN_ACCESS.getKey());
     }
 

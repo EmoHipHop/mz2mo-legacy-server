@@ -10,6 +10,8 @@ import com.EmoHipHop.mz2mo.domain.vote.data.request.RemoveVoteRequest;
 import com.EmoHipHop.mz2mo.domain.vote.data.response.AddVoteResponse;
 import com.EmoHipHop.mz2mo.domain.vote.data.response.RemoveVoteResponse;
 import com.EmoHipHop.mz2mo.global.emoji.data.entity.Emoji;
+import com.EmoHipHop.mz2mo.global.emoji.exception.EmojiNotFoundException;
+import com.EmoHipHop.mz2mo.global.emoji.util.EmojiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,29 +24,33 @@ public class VoteConverterImpl implements VoteConverter {
 
     @Override
     public AddVoteDto toDto(AddVoteRequest request, String userId, String musicId) {
+        String rawEmoji = request.rawEmoji();
+        String emojiCode = EmojiUtil.serialize(rawEmoji);
         return new AddVoteDto(
             userId,
             musicId,
-            emojiRepository.findByCode(request.emojiCode()).getId()
+            emojiRepository.findByCode(emojiCode).orElseThrow(() -> new EmojiNotFoundException("emojiId", emojiCode)).getId()
         );
     }
 
     @Override
     public RemoveVoteDto toDto(RemoveVoteRequest request, String userId, String musicId) {
+        String rawEmoji = request.rawEmoji();
+        String emojiCode = EmojiUtil.serialize(rawEmoji);
         return new RemoveVoteDto(
                 userId,
                 musicId,
-                emojiRepository.findByCode(request.emojiCode()).getId()
+                emojiRepository.findByCode(emojiCode)
+                        .orElseThrow(() -> new EmojiNotFoundException("emojiId", emojiCode))
+                        .getId()
         );
     }
 
     @Override
-    public VoteDto toDto(List<MusicEmojiVote> votes) {
-        MusicEmojiVote vote = votes.get(0);
+    public VoteDto toDto(List<MusicEmojiVote> votes, String userId, String musicId) {
         return new VoteDto(
-                vote.getId(),
-                vote.getUser().getId(),
-                vote.getMusic().getId(),
+                userId,
+                musicId,
                 votes.stream().map(MusicEmojiVote::getEmoji).map(Emoji::getId).toArray(String[]::new)
         );
     }

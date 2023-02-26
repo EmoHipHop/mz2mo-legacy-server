@@ -1,6 +1,6 @@
 package com.EmoHipHop.mz2mo.domain.emoji.controller;
 
-import com.EmoHipHop.mz2mo.domain.emoji.data.EmojiDto;
+import com.EmoHipHop.mz2mo.domain.emoji.data.dto.EmojiDto;
 import com.EmoHipHop.mz2mo.domain.emoji.data.response.EmojiListResponse;
 import com.EmoHipHop.mz2mo.domain.emoji.service.EmojiService;
 import com.EmoHipHop.mz2mo.domain.emoji.util.EmojiConverter;

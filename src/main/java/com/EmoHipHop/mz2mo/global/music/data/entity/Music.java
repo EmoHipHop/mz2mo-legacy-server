@@ -1,4 +1,4 @@
-package com.EmoHipHop.mz2mo.domain.music.data.entity;
+package com.EmoHipHop.mz2mo.global.music.data.entity;
 
 import lombok.*;
 

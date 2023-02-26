@@ -1,4 +1,4 @@
-package com.EmoHipHop.mz2mo.global.service;
+package com.EmoHipHop.mz2mo.global.security.service;
 
 import org.springframework.stereotype.Service;
 

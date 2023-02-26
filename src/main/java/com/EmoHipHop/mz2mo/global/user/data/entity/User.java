@@ -1,4 +1,4 @@
-package com.EmoHipHop.mz2mo.domain.emoji.data.entity;
+package com.EmoHipHop.mz2mo.global.user.data.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,15 +7,16 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
+@Getter @Setter
 @NoArgsConstructor
-public class Emoji {
+@AllArgsConstructor
+public class User {
     @Id
     private String id;
-    private String code;
-    private String name;
+    private String email;
+    private String nickname;
+    private LocalDateTime createAt;
 }

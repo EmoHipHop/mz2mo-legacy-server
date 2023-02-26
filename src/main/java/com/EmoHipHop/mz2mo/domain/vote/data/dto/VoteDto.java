@@ -4,5 +4,5 @@ public record VoteDto(
     String id,
     String userId,
     String musicId,
-    String[] currentVoteEmojiCodes
+    String[] currentVoteEmojiIds
 ) { }

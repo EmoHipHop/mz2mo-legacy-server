@@ -18,4 +18,5 @@ public class Emoji {
     private String id;
     private String code;
     private String name;
+    private boolean canUse;
 }
